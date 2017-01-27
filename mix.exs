@@ -2,19 +2,28 @@ defmodule OpenTok.Mixfile do
     use Mix.Project
 
     def project do
-        [app: :opentok,
-         version: "0.1.0",
-         elixir: "~> 1.3",
-         build_embedded: Mix.env == :prod,
-         start_permanent: Mix.env == :prod,
-         deps: deps()]
+        [
+            app: :opentok,
+            version: "0.1.0",
+            elixir: "~> 1.3",
+            build_embedded: Mix.env == :prod,
+            start_permanent: Mix.env == :prod,
+            deps: deps()
+        ]
     end
 
     # Configuration for the OTP application
     #
     # Type "mix help compile.app" for more information
     def application do
-        [applications: [:logger]]
+        [
+            applications: [
+                :logger,
+                :jose,
+                :httpoison,
+                :httpotion
+            ]
+        ]
     end
 
     # Dependencies can be Hex packages:
@@ -27,6 +36,12 @@ defmodule OpenTok.Mixfile do
     #
     # Type "mix help deps" for more examples and options
     defp deps do
-        []
+        [
+            {:jose, "~> 1.8"},
+            {:poison, "~> 2.2"},
+            {:hackney, "1.6.1"},
+            {:httpoison, "~> 0.9.2"},
+            {:httpotion, "~> 3.0.2"}
+        ]
     end
 end

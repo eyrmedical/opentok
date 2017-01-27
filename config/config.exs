@@ -28,3 +28,9 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+config :opentok, OpenTok,
+    iss: "project",
+    key: "PUT OPENTOK KEY",
+    secret: "PUT OPENTOK SECRET",
+    ttl: 60 * 5
