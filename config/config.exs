@@ -31,6 +31,6 @@ use Mix.Config
 
 config :opentok, OpenTok,
     iss: "project",
-    key: "PUT OPENTOK KEY",
-    secret: "PUT OPENTOK SECRET",
+    key: "12345678",
+    secret: "0123456789abcdef0123456789abcdef0123456789",
     ttl: 60 * 5

@@ -11,6 +11,12 @@ defmodule OpenTok do
     @default_algos ["HS256"]
     @endpoint "https://api.opentok.com"
 
+    @role_publisher "publisher"
+    @role_subscriber "subscriber"
+    @role_moderator "moderator"
+
+    @token_prefix "T1=="
+
     unless Application.get_env(:opentok, OpenTok) do
         raise "OpenTok is not configured"
     end
@@ -39,6 +45,26 @@ defmodule OpenTok do
             "Accept": "application/json"]
         ] 
         opentok_process_response(response)
+    end
+
+    @doc """
+    Generate unique token to access session.
+    """
+    @spec generate_token(String.t, Keyword.t) :: String.t
+    def generate_token(session_id, opts \\ []) do
+        role = Keyword.get(opts, :role, @role_publisher)
+        expire_time = Keyword.get(opts, :expire_time)
+        connection_data = Keyword.get(opts, :connection_data)
+
+        ts = :os.system_time(:seconds)
+        nonce = :crypto.strong_rand_bytes(16)
+        |> Base.encode16
+
+        data_string = "session_id=#{session_id}&create_time=#{ts}&role=#{role}&nonce=#{nonce}"
+        |> data_string(expire_time, connection_data)
+        signature = sign_string(data_string, config(:secret))
+
+        @token_prefix <> Base.encode64("partner_id=#{config(:key)}&sig=#{signature}:#{data_string}")
     end
 
 
@@ -118,4 +144,28 @@ defmodule OpenTok do
     defp jose_jwk({mod, fun}),       do: jose_jwk(:erlang.apply(mod, fun, []))
     defp jose_jwk({mod, fun, args}), do: jose_jwk(:erlang.apply(mod, fun, args))
     defp jose_jwk(nil), do: jose_jwk(config(:secret) || false)
+
+
+    @spec data_string(String.t, nil | String.t, nil | String.t) :: String.t
+    defp data_string(string, nil, nil) do
+        string
+    end
+    defp data_string(string, expire_time, nil) do
+        string <> "&expire_time=#{expire_time}"
+    end
+    defp data_string(string, nil, connection_data) do
+        string <> "&connection_data=#{URI.encode(connection_data)}"
+    end
+    defp data_string(string, expire_time, connection_data) do
+        string
+        |> data_string(expire_time, nil)
+        |> data_string(nil, connection_data)
+    end
+
+    @spec sign_string(String.t, String.t) :: String.t
+    defp sign_string(string, secret) do
+        :sha
+        |> :crypto.hmac(secret, string)
+        |> Base.encode16
+    end
 end
