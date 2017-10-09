@@ -4,7 +4,7 @@ defmodule OpenTok.Mixfile do
     def project do
         [
             app: :opentok,
-            version: "0.1.0",
+            version: "0.1.3",
             elixir: "~> 1.3",
             build_embedded: Mix.env == :prod,
             start_permanent: Mix.env == :prod,
@@ -38,7 +38,7 @@ defmodule OpenTok.Mixfile do
     defp deps do
         [
             {:jose, "~> 1.8"},
-            {:poison, "~> 2.2"},
+            {:poison, "~> 3.0"},
             {:hackney, "1.6.1"},
             {:httpoison, "~> 0.9.2"},
             {:httpotion, "~> 3.0.2"}
