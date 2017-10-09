@@ -39,7 +39,7 @@ defmodule OpenTok.Mixfile do
         [
             {:jose, "~> 1.8"},
             {:poison, "~> 2.2"},
-            {:hackney, "1.6.1"},
+            {:hackney, "~> 1.6"},
             {:httpoison, "~> 0.9.2"},
             {:httpotion, "~> 3.0.2"}
         ]
