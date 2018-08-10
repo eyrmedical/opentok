@@ -30,7 +30,7 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :opentok, OpenTok,
-    iss: "project",
-    key: "12345678",
-    secret: "0123456789abcdef0123456789abcdef0123456789",
-    ttl: 60 * 5
+  iss: "project",
+  key: "12345678",
+  secret: "0123456789abcdef0123456789abcdef0123456789",
+  ttl: 60 * 5
