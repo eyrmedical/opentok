@@ -40,7 +40,7 @@ defmodule OpenTok.Mixfile do
       {:jose, "~> 1.8"},
       {:poison, "~> 3.0"},
       {:hackney, ">= 1.10.1"},
-      {:httpoison, ">= 0.1.0"},
+      {:httpoison, "~> 1.4"},
       {:httpotion, ">= 3.0.2"}
     ]
   end
