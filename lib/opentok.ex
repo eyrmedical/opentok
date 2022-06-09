@@ -175,8 +175,7 @@ defmodule OpenTok do
 
   @spec sign_string(String.t(), String.t()) :: String.t()
   defp sign_string(string, secret) do
-    :sha
-    |> :crypto.hmac(secret, string)
+    :crypto.mac(:hmac, :sha, secret, string)
     |> Base.encode16()
   end
 end
