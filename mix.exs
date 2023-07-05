@@ -24,7 +24,7 @@ defmodule OpenTok.Mixfile do
   defp deps do
     [
       {:jose, "~> 1.9"},
-      {:poison, "~> 5.0"},
+      {:poison, "~> 4.0"},
       {:hackney, "~> 1.18"},
       {:httpoison, "~> 1.4"}
     ]
