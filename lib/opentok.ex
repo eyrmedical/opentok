@@ -12,8 +12,6 @@ defmodule OpenTok do
   @endpoint "https://api.opentok.com"
 
   @role_publisher "publisher"
-  # @role_subscriber "subscriber"
-  # @role_moderator "moderator"
 
   @token_prefix "T1=="
 
@@ -29,20 +27,15 @@ defmodule OpenTok do
     raise "OpenTok requires :secret to be configured"
   end
 
-  @doc """
-  Create new WebRTC session.
-
-  We have to use `HTTPotion` in this case, because
-  for some weird reason it's impossible to sent request without
-  Content-Type in `hackney` which is the low-level driver for `HTTPoison`
-  and it's a requirement for this specific OpenTok call.
-  """
   @spec session_create() :: opentok_response
   def session_create do
     response =
-      HTTPotion.post(
+      HTTPoison.post(
         @endpoint <> "/session/create",
-        headers: ["X-OPENTOK-AUTH": jwt(), Accept: "application/json"]
+        "",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-OPENTOK-AUTH": jwt(),
+        Accept: "application/json"
       )
 
     opentok_process_response(response)
@@ -98,16 +91,16 @@ defmodule OpenTok do
     jwt
   end
 
-  defp process_url(url) do
+  def process_url(url) do
     @endpoint <> url
   end
 
   @spec process_request_headers(map() | Keyword.t()) :: [{binary, term}]
-  defp process_request_headers(headers) when is_map(headers) do
+  def process_request_headers(headers) when is_map(headers) do
     process_request_headers(Enum.into(headers, []))
   end
 
-  defp process_request_headers(headers) do
+  def process_request_headers(headers) do
     auth_headers = [
       {"X-OPENTOK-AUTH", jwt()},
       {"Accept", "application/json"}
@@ -116,10 +109,10 @@ defmodule OpenTok do
     auth_headers ++ headers
   end
 
-  @spec opentok_process_response(%HTTPoison.Response{} | %HTTPotion.Response{}) :: opentok_response
+  @spec opentok_process_response(%HTTPoison.Response{}) :: opentok_response
   defp opentok_process_response(response) do
     case response do
-      %{status_code: 200, body: body} ->
+      {:ok, %{status_code: 200, body: body}} ->
         json = Poison.decode!(body)
         {:json, json}
 
